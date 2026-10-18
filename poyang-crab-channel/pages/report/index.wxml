@@ -1,0 +1,68 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'draft' ? 'active' : ''}}" data-tab="draft" bindtap="onTabTap">报单草稿</view>
+    <view class="tab {{tab === 'history' ? 'active' : ''}}" data-tab="history" bindtap="onTabTap">我的报单</view>
+  </view>
+
+  <!-- 草稿 -->
+  <block wx:if="{{tab === 'draft'}}">
+    <view class="hint">批发起订量 {{minOrderQty}} 件；渠道价由后台配置，下单时按渠道档案快照留痕。</view>
+
+    <view wx:if="{{draft.length}}">
+      <view class="card draft-item" wx:for="{{draft}}" wx:key="skuId">
+        <image class="draft-image" src="{{item.image}}" mode="aspectFill" />
+        <view class="draft-body">
+          <view class="ellipsis-2">{{item.skuName}}</view>
+          <view class="row-between draft-bottom">
+            <view class="price"><text class="price-symbol">¥</text><text class="price-int">{{item.channelPrice}}</text></view>
+            <view class="stepper">
+              <view class="stepper-btn" data-skuid="{{item.skuId}}" data-delta="-1" bindtap="onQuantityChange">-</view>
+              <input class="stepper-input" type="number" value="{{item.qty}}" data-skuid="{{item.skuId}}" bindinput="onQuantityInput" />
+              <view class="stepper-btn" data-skuid="{{item.skuId}}" data-delta="1" bindtap="onQuantityChange">+</view>
+            </view>
+          </view>
+        </view>
+        <view class="draft-remove" data-skuid="{{item.skuId}}" bindtap="onRemove">×</view>
+      </view>
+
+      <view class="card row-between">
+        <view class="text-sub">合计 {{totalQty}} 件</view>
+        <view class="price">¥{{totalAmount}}</view>
+      </view>
+    </view>
+
+    <view wx:else class="empty">
+      <view>报单草稿为空</view>
+      <button class="btn-plain go-product" bindtap="onGoProduct">去渠道价选货</button>
+    </view>
+
+    <view class="footer-placeholder" wx:if="{{draft.length}}"></view>
+    <view class="footer-bar" wx:if="{{draft.length}}">
+      <view class="clear" bindtap="onClear">清空</view>
+      <button class="btn-primary submit-btn" disabled="{{submitting}}" bindtap="onSubmit">
+        {{submitting ? '提交中…' : '提交报单'}}
+      </button>
+    </view>
+  </block>
+
+  <!-- 报单记录 -->
+  <block wx:else>
+    <view class="card report-item" wx:for="{{reports}}" wx:key="reportNo">
+      <view class="row-between">
+        <text class="ellipsis">报单号：{{item.reportNo}}</text>
+        <text class="status">{{item.auditStatusText}}</text>
+      </view>
+      <view class="row-between report-line">
+        <text class="text-sub">共 {{item.totalQty}} 件</text>
+        <text class="price">¥{{item.amountText}}</text>
+      </view>
+      <view class="text-sub">{{item.timeText}}</view>
+      <view wx:if="{{item.auditRemark}}" class="text-sub">审核备注：{{item.auditRemark}}</view>
+      <view wx:if="{{item.orderNo}}" class="text-sub">已生成批发订单：{{item.orderNo}}</view>
+    </view>
+
+    <view wx:if="{{!reports.length && !loading}}" class="empty">暂无报单记录</view>
+    <view wx:if="{{loading}}" class="text-sub loading">加载中…</view>
+    <view wx:elif="{{finished && reports.length}}" class="text-sub loading">没有更多了</view>
+  </block>
+</view>

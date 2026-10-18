@@ -1,0 +1,82 @@
+.address-card {
+  border-left: 8rpx solid var(--brand);
+}
+
+.address-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.address-detail {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+
+.address-empty {
+  font-size: 28rpx;
+  color: var(--brand);
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.order-item {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.order-image {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  background: #EDEDED;
+  flex-shrink: 0;
+}
+
+.order-body {
+  flex: 1;
+  margin-left: 20rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.order-right {
+  text-align: right;
+  margin-left: 16rpx;
+}
+
+.remark {
+  width: 100%;
+  min-height: 140rpx;
+  font-size: 26rpx;
+  background: #F7F8FA;
+  border-radius: 12rpx;
+  padding: 16rpx;
+}
+
+.amount-row {
+  font-size: 26rpx;
+  line-height: 2;
+}
+
+.footer-placeholder {
+  height: 140rpx;
+}
+
+.footer-bar .total {
+  flex: 1;
+  font-size: 26rpx;
+}
+
+.submit-btn {
+  width: 280rpx;
+  margin: 0;
+}

@@ -1,0 +1,68 @@
+.login {
+  min-height: 100vh;
+  padding: 140rpx 56rpx 0;
+  background: linear-gradient(180deg, #0B3D91 0%, #2A6BD4 40%, #F5F6F8 40%);
+}
+
+.logo {
+  color: #fff;
+  font-size: 56rpx;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+}
+
+.slogan {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 26rpx;
+  margin-top: 16rpx;
+}
+
+.login-box {
+  margin-top: 120rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 48rpx 40rpx;
+  box-shadow: 0 12rpx 32rpx rgba(11, 61, 145, 0.12);
+}
+
+.login-btn,
+.phone-btn {
+  width: 100%;
+  margin: 0;
+}
+
+.phone-btn {
+  margin-top: 24rpx;
+}
+
+.agreement {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 32rpx;
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.agree-label {
+  display: flex;
+  align-items: center;
+}
+
+.agreement checkbox {
+  transform: scale(0.7);
+}
+
+.link {
+  color: var(--brand);
+}
+
+.tips {
+  margin-top: 24rpx;
+  line-height: 1.6;
+}
+
+.service {
+  margin-top: 80rpx;
+  text-align: center;
+}

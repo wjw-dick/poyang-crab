@@ -1,0 +1,26 @@
+{
+  "description": "螃蟹小公主 · 鄱阳湖湖蟹 渠道商端小程序（微信原生）",
+  "appid": "wxPLACEHOLDER1111",
+  "projectname": "poyang-crab-channel",
+  "compileType": "miniprogram",
+  "libVersion": "3.5.5",
+  "miniprogramRoot": "./",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "ignoreUploadUnusedFiles": true,
+    "coverView": true
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        { "name": "工作台", "pathName": "pages/index/index", "query": "", "scene": null },
+        { "name": "报单", "pathName": "pages/report/index", "query": "", "scene": null },
+        { "name": "渠道价", "pathName": "pages/product/index", "query": "", "scene": null }
+      ]
+    }
+  }
+}

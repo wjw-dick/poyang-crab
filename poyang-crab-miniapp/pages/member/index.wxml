@@ -1,0 +1,126 @@
+<view class="page">
+  <!-- 会员头部 -->
+  <view class="header">
+    <block wx:if="{{profile}}">
+      <image class="avatar" src="{{profile.avatar}}" mode="aspectFill" />
+      <view class="header-info">
+        <view class="nickname">{{profile.nickname || '湖蟹会员'}}</view>
+        <view class="level">{{profile.memberLevel || '普通会员'}}</view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="avatar avatar-placeholder">蟹</view>
+      <view class="header-info">
+        <view class="nickname">未登录</view>
+        <view class="level" bindtap="onLogin">点击登录 · 会员特权</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 资产 -->
+  <view class="assets">
+    <view class="asset-item">
+      <view class="asset-value">{{profile.points || 0}}</view>
+      <view class="text-sub">积分</view>
+    </view>
+    <view class="asset-item">
+      <view class="asset-value">¥{{profile.balance || '0.00'}}</view>
+      <view class="text-sub">储值余额</view>
+    </view>
+    <view class="asset-item">
+      <view class="asset-value">{{coupons.length}}</view>
+      <view class="text-sub">卡券</view>
+    </view>
+  </view>
+
+  <!-- 订单快捷入口 -->
+  <view class="card" wx:if="{{tab === 'center'}}">
+    <view class="row-between" bindtap="onAllOrders">
+      <view class="section-title">我的订单</view>
+      <view class="text-sub">全部订单 ></view>
+    </view>
+    <view class="order-entries">
+      <view
+        wx:for="{{orderEntries}}"
+        wx:key="status"
+        class="order-entry"
+        data-status="{{item.status}}"
+        bindtap="onOrderEntry"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 积分明细 -->
+  <view class="card" wx:if="{{tab === 'center' && points.length}}">
+    <view class="section-title">积分明细</view>
+    <view class="log-item row-between" wx:for="{{points}}" wx:key="id">
+      <view>
+        <view>{{item.remark || '积分变动'}}</view>
+        <view class="text-sub">{{item.timeText}}</view>
+      </view>
+      <view class="log-value">{{item.changeValue > 0 ? '+' : ''}}{{item.changeValue}}</view>
+    </view>
+  </view>
+
+  <!-- 储值明细 -->
+  <view class="card" wx:if="{{tab === 'center' && balances.length}}">
+    <view class="section-title">储值明细</view>
+    <view class="log-item row-between" wx:for="{{balances}}" wx:key="id">
+      <view>
+        <view>{{item.remark || '余额变动'}}</view>
+        <view class="text-sub">{{item.timeText}}</view>
+      </view>
+      <view class="log-value">¥{{item.amountText}}</view>
+    </view>
+  </view>
+
+  <!-- 我的卡券 -->
+  <view class="card" wx:if="{{tab === 'center'}}">
+    <view class="section-title">我的卡券</view>
+    <view wx:if="{{!coupons.length}}" class="text-sub empty-inline">暂无可用卡券</view>
+    <view class="coupon" wx:for="{{coupons}}" wx:key="id">
+      <view class="coupon-amount">¥{{item.faceValue}}</view>
+      <view class="coupon-body">
+        <view>{{item.couponName}}</view>
+        <view class="text-sub">{{item.endTime ? '有效期至 ' + item.endTime : '长期有效'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地址管理 -->
+  <block wx:if="{{tab === 'address'}}">
+    <view class="card address-item" wx:for="{{addresses}}" wx:key="id" data-id="{{item.id}}" bindtap="onAddressTap">
+      <view class="row-between">
+        <text class="address-name">{{item.contact}}</text>
+        <text class="text-sub">{{item.mobile}}</text>
+      </view>
+      <view class="address-detail">{{item.province}}{{item.city}}{{item.district}}{{item.detail}}</view>
+      <view class="row-between address-actions">
+        <text class="tag" wx:if="{{item.isDefault === 1}}">默认</text>
+        <text class="delete" data-id="{{item.id}}" catchtap="onDeleteAddress">删除</text>
+      </view>
+    </view>
+    <view wx:if="{{!addresses.length}}" class="empty">还没有收货地址</view>
+  </block>
+
+  <view class="safe-bottom"></view>
+  <view class="footer-bar" wx:if="{{tab === 'address'}}">
+    <button class="btn-primary footer-full" bindtap="onAddAddress">+ 新增收货地址</button>
+  </view>
+
+  <!-- 切换 & 退出 -->
+  <view class="card">
+    <view class="row-between link-row" data-tab="center" bindtap="onTabChange">
+      <text>会员中心</text><text class="text-sub">></text>
+    </view>
+    <view class="row-between link-row" data-tab="address" bindtap="onTabChange">
+      <text>收货地址</text><text class="text-sub">></text>
+    </view>
+    <view class="row-between link-row" bindtap="onContactService">
+      <text>联系客服</text><text class="text-sub">></text>
+    </view>
+    <view wx:if="{{profile}}" class="row-between link-row" bindtap="onLogout">
+      <text>退出登录</text><text class="text-sub">></text>
+    </view>
+  </view>
+</view>

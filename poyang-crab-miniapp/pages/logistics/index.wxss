@@ -1,0 +1,70 @@
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.info-row {
+  font-size: 26rpx;
+  line-height: 2;
+  margin-top: 8rpx;
+}
+
+.copy {
+  color: var(--brand);
+  font-size: 24rpx;
+}
+
+.tip {
+  margin-top: 16rpx;
+  padding: 16rpx;
+  font-size: 24rpx;
+  color: #A8741A;
+  background: #FFF8E6;
+  border-radius: 8rpx;
+}
+
+.timeline {
+  margin-top: 16rpx;
+}
+
+.timeline-item {
+  display: flex;
+  position: relative;
+  padding: 0 0 32rpx 32rpx;
+  border-left: 2rpx solid var(--line);
+}
+
+.timeline-item:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -11rpx;
+  top: 6rpx;
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: #D9DEE7;
+}
+
+.timeline-item.active .timeline-dot {
+  background: var(--brand);
+  box-shadow: 0 0 0 6rpx rgba(11, 61, 145, 0.12);
+}
+
+.timeline-content {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.timeline-remark {
+  font-size: 27rpx;
+  line-height: 1.5;
+}
+
+.timeline-item.active .timeline-remark {
+  color: var(--brand);
+  font-weight: 500;
+}

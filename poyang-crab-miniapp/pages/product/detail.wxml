@@ -1,0 +1,77 @@
+<view class="page" wx:if="{{loaded}}">
+  <!-- 图集 -->
+  <swiper class="banner" indicator-dots circular bindchange="onBannerChange">
+    <swiper-item wx:for="{{banners}}" wx:key="*this">
+      <image class="banner-image" src="{{item}}" mode="aspectFill" bindtap="onPreviewImage" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 价格与标题 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="price">
+        <text class="price-symbol">¥</text><text class="price-int">{{priceParts.int}}</text><text class="price-symbol">.{{priceParts.decimal}}</text>
+      </view>
+      <view class="text-sub">{{product.sellMode === 'BOTH' ? '支持批发' : '零售'}}</view>
+    </view>
+    <view class="title">{{product.productName}}</view>
+    <view class="text-sub">{{product.origin || '鄱阳湖产区'}}</view>
+    <view class="text-sub" wx:if="{{product.minOrderQty > 1}}">起订量：{{product.minOrderQty}} 件</view>
+  </view>
+
+  <!-- 规格选择：公母 / 重量档 / 包装 -->
+  <view class="card" wx:for="{{specGroups}}" wx:key="field">
+    <view class="spec-label">{{item.label}}</view>
+    <view class="spec-options">
+      <view
+        wx:for="{{item.options}}"
+        wx:for-item="opt"
+        wx:key="value"
+        class="spec-option {{selectedSpec[item.field] === opt.value ? 'active' : ''}}"
+        data-field="{{item.field}}"
+        data-value="{{opt.value}}"
+        bindtap="onSpecTap"
+      >{{opt.label}}</view>
+    </view>
+  </view>
+
+  <!-- 数量 -->
+  <view class="card row-between">
+    <view class="spec-label">购买数量</view>
+    <view class="stepper">
+      <view class="stepper-btn" data-delta="-1" bindtap="onQuantityChange">-</view>
+      <view class="stepper-value">{{quantity}}</view>
+      <view class="stepper-btn" data-delta="1" bindtap="onQuantityChange">+</view>
+    </view>
+  </view>
+
+  <!-- 评价 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="section-title">用户评价</view>
+      <view class="text-sub" bindtap="onCustomerService">全部评价</view>
+    </view>
+    <view wx:if="{{!reviews.length}}" class="text-sub empty-inline">暂无评价，期待您的首评</view>
+    <view wx:for="{{reviews}}" wx:key="id" class="review-item">
+      <view class="row-between">
+        <text class="review-user">{{item.nickname || '匿名用户'}}</text>
+        <text class="text-sub">{{item.timeText}}</text>
+      </view>
+      <view class="review-content">{{item.content}}</view>
+    </view>
+  </view>
+
+  <!-- 图文详情：后台 WangEditor 产出的富文本 -->
+  <view class="card">
+    <view class="section-title">图文详情</view>
+    <rich-text nodes="{{product.detailHtml}}"></rich-text>
+  </view>
+
+  <view class="footer-placeholder"></view>
+</view>
+
+<view class="footer-bar">
+  <view class="footer-icon" bindtap="onCustomerService">客服</view>
+  <view class="footer-icon" bindtap="onAddCart">加入购物车</view>
+  <button class="btn-primary footer-buy" bindtap="onBuyNow">立即购买</button>
+</view>

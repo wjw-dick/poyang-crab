@@ -1,0 +1,62 @@
+.tabs {
+  display: flex;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 27rpx;
+  padding: 24rpx 0;
+  color: var(--text-sub);
+}
+
+.tab.active {
+  color: var(--brand);
+  font-weight: 600;
+  border-bottom: 4rpx solid var(--brand);
+}
+
+.order-head {
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.status {
+  font-size: 26rpx;
+  color: var(--price);
+}
+
+.order-main {
+  padding: 20rpx 0;
+}
+
+.order-amount {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action {
+  margin-left: 16rpx;
+  padding: 0 28rpx;
+  font-size: 26rpx;
+  line-height: 2.2;
+}
+
+.load-more {
+  text-align: center;
+  padding: 24rpx 0;
+}
+
+.go-shopping {
+  margin-top: 32rpx;
+  width: 320rpx;
+}

@@ -1,0 +1,17 @@
+<view class="login">
+  <view class="logo">渠道商中心</view>
+  <view class="slogan">鄱阳湖湖蟹 · 批发报单 · 佣金结算</view>
+
+  <view class="login-box">
+    <button class="btn-primary login-btn" disabled="{{loading}}" bindtap="onLogin">
+      {{loading ? '登录中…' : '微信一键登录'}}
+    </button>
+    <button class="btn-plain apply-btn" bindtap="onApply">申请成为渠道商</button>
+  </view>
+
+  <view class="tips text-sub">
+    登录后系统将自动校验绑定的渠道商档案（t_channel.union_id），未开通请先提交合作申请。
+  </view>
+
+  <view class="service text-sub" wx:if="{{site.servicePhone}}">平台热线：{{site.servicePhone}}</view>
+</view>

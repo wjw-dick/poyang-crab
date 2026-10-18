@@ -1,0 +1,30 @@
+{
+  "description": "螃蟹小公主 · 鄱阳湖湖蟹 C 端小程序（微信原生）",
+  "appid": "wxPLACEHOLDER0000",
+  "projectname": "poyang-crab-miniapp",
+  "compileType": "miniprogram",
+  "libVersion": "3.5.5",
+  "miniprogramRoot": "./",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "useCompilerPlugins": false,
+    "ignoreUploadUnusedFiles": true,
+    "coverView": true,
+    "packNpmManually": false,
+    "packNpmRelationList": []
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        { "name": "首页", "pathName": "pages/index/index", "query": "", "scene": null },
+        { "name": "商品详情", "pathName": "pages/product/detail", "query": "id=1", "scene": null },
+        { "name": "购物车", "pathName": "pages/cart/index", "query": "", "scene": null },
+        { "name": "我的", "pathName": "pages/member/index", "query": "", "scene": null }
+      ]
+    }
+  }
+}

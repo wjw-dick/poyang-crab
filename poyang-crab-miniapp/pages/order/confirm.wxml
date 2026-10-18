@@ -1,0 +1,58 @@
+<view class="page">
+  <!-- 收货地址 -->
+  <view class="card address-card" bindtap="onSelectAddress">
+    <block wx:if="{{address}}">
+      <view class="row-between">
+        <text class="address-name">{{address.contact}}</text>
+        <text class="text-sub">{{address.mobile}}</text>
+      </view>
+      <view class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</view>
+    </block>
+    <view wx:else class="address-empty">+ 请选择收货地址</view>
+  </view>
+
+  <!-- 商品清单 -->
+  <view class="card">
+    <view class="section-title">商品清单</view>
+    <view class="order-item" wx:for="{{items}}" wx:key="index">
+      <image class="order-image" src="{{item.image}}" mode="aspectFill" />
+      <view class="order-body">
+        <view class="ellipsis-2">{{item.productName}}</view>
+        <view class="text-sub">{{item.specText}}</view>
+      </view>
+      <view class="order-right">
+        <view class="price"><text class="price-symbol">¥</text>{{item.price}}</view>
+        <view class="text-sub">x{{item.quantity}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="card">
+    <view class="section-title">订单备注</view>
+    <textarea
+      class="remark"
+      value="{{remark}}"
+      maxlength="100"
+      placeholder="鲜活水产，建议注明收货时段"
+      bindinput="onRemarkInput"
+    />
+  </view>
+
+  <!-- 金额 -->
+  <view class="card">
+    <view class="row-between amount-row"><text>商品金额</text><text>¥{{totalAmount}}</text></view>
+    <view class="row-between amount-row"><text>冷链运费</text><text>¥{{freight}}</text></view>
+    <view class="row-between amount-row"><text>优惠</text><text>-¥0.00</text></view>
+  </view>
+
+  <view class="footer-placeholder"></view>
+  <view class="footer-bar">
+    <view class="total">
+      应付：<text class="price"><text class="price-symbol">¥</text><text class="price-int">{{payableParts.int}}</text><text class="price-symbol">.{{payableParts.decimal}}</text></text>
+    </view>
+    <button class="btn-primary submit-btn" disabled="{{submitting}}" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '提交订单'}}
+    </button>
+  </view>
+</view>

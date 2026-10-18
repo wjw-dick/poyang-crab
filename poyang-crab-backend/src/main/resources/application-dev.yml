@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # T04 HikariCP 连接池：上限 50 / 连接超时 30s / 空闲回收 60s
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+      pool-name: PoyangCrabHikariPool
+    # 读写分离开关：默认关闭（后台可开启，见 sys_config: datasource.read-write-split）
+    url: jdbc:mysql://localhost:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    username: poyang_crab
+    password: BZcEXmWxiDcmx5bw
+    # 从库（读写分离开启时启用）
+    slave:
+      enabled: false
+      url: jdbc:mysql://localhost:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+      username: poyang_crab
+      password: BZcEXmWxiDcmx5bw
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 5s
+      lettuce:
+        pool:
+          max-idle: 20
+          min-idle: 5
+          max-active: 100
+          max-wait: 5s
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /poyang_crab
+    username: poyang_crab
+    password: BZcEXmWxiDcmx5bw
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        prefetch: 10
+        concurrency: 2
+        max-concurrency: 8
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+
+logging:
+  level:
+    com.xiegongzhu.crab: debug
+    org.springframework.amqp: info
+  file:
+    name: ./logs/poyang-crab-backend.log

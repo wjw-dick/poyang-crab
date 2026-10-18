@@ -1,0 +1,46 @@
+<view class="page">
+  <view class="summary">
+    <view class="summary-item">
+      <view class="summary-value">¥{{summary.pending}}</view>
+      <view class="summary-label">待结算</view>
+    </view>
+    <view class="summary-item">
+      <view class="summary-value">¥{{summary.settled}}</view>
+      <view class="summary-label">已结算</view>
+    </view>
+    <view class="summary-item" bindtap="onGoSettlement">
+      <view class="summary-value">去对账</view>
+      <view class="summary-label">生成结算单</view>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab {{activeStatus === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="onTabTap"
+    >{{item.label}}</view>
+  </view>
+
+  <view class="card commission-item" wx:for="{{commissions}}" wx:key="id">
+    <view class="row-between">
+      <view class="row">
+        <text class="tag">{{item.typeText}}</text>
+        <text class="commission-no">{{item.commissionNo}}</text>
+      </view>
+      <text class="amount">+¥{{item.amountText}}</text>
+    </view>
+    <view class="line text-sub">订单号：{{item.orderNo}}</view>
+    <view class="line text-sub">计佣基数 ¥{{item.baseAmountText}} × {{item.rateText}}</view>
+    <view class="row-between line">
+      <text class="text-sub">{{item.timeText}}</text>
+      <text class="status">{{item.statusText}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!commissions.length && !loading}}" class="empty">暂无佣金记录</view>
+  <view wx:if="{{loading}}" class="text-sub loading">加载中…</view>
+  <view wx:elif="{{finished && commissions.length}}" class="text-sub loading">没有更多了</view>
+</view>

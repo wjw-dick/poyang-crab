@@ -1,0 +1,161 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 48rpx 32rpx;
+  background: linear-gradient(135deg, #0B3D91, #2A6BD4);
+  color: #fff;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  color: #fff;
+}
+
+.header-info {
+  margin-left: 24rpx;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.level {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8rpx;
+}
+
+.assets {
+  display: flex;
+  background: #fff;
+  margin: 0 24rpx;
+  margin-top: -40rpx;
+  border-radius: 16rpx;
+  padding: 28rpx 0;
+  box-shadow: 0 8rpx 24rpx rgba(11, 61, 145, 0.08);
+}
+
+.asset-item {
+  flex: 1;
+  text-align: center;
+}
+
+.asset-value {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.order-entries {
+  display: flex;
+  margin-top: 24rpx;
+}
+
+.order-entry {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  padding: 16rpx 0;
+}
+
+.log-item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 26rpx;
+}
+
+.log-value {
+  color: var(--price);
+  font-weight: 500;
+}
+
+.coupon {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+  border: 1rpx solid var(--brand-light);
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.coupon-amount {
+  width: 160rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  color: var(--brand);
+  font-size: 36rpx;
+  font-weight: 600;
+  background: var(--brand-light);
+}
+
+.coupon-body {
+  flex: 1;
+  padding: 0 24rpx;
+  font-size: 27rpx;
+}
+
+.empty-inline {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.address-item {
+  border-left: 8rpx solid var(--brand);
+}
+
+.address-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.address-detail {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+
+.address-actions {
+  margin-top: 16rpx;
+}
+
+.delete {
+  font-size: 24rpx;
+  color: var(--text-sub);
+}
+
+.link-row {
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 28rpx;
+}
+
+.link-row:last-child {
+  border-bottom: none;
+}
+
+.footer-bar {
+  justify-content: center;
+}
+
+.footer-full {
+  width: 100%;
+  margin: 0;
+}

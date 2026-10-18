@@ -1,0 +1,90 @@
+/* 全站基础样式：PC 自适应（PC / 平板 / 手机），H5 分享页复用 */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  color: #1f2937;
+  background: #f7f9fc;
+}
+a {
+  color: inherit;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  padding: 18px;
+}
+.grid {
+  display: grid;
+  gap: 16px;
+}
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 960px) {
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 26px 0 14px;
+}
+.thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #eef2f7;
+}
+.price {
+  color: #e11d48;
+  font-weight: 700;
+}
+.btn-primary {
+  display: inline-block;
+  background: #e11d48;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-outline {
+  display: inline-block;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 11px 20px;
+  background: #fff;
+  cursor: pointer;
+}
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #94a3b8;
+}
+.rich-content {
+  line-height: 1.9;
+  font-size: 15px;
+}
+.rich-content img {
+  max-width: 100%;
+}

@@ -1,0 +1,76 @@
+.status-bar {
+  background: linear-gradient(135deg, #0B3D91, #2A6BD4);
+  color: #fff;
+  padding: 40rpx 32rpx;
+}
+
+.status-text {
+  font-size: 40rpx;
+  font-weight: 600;
+}
+
+.status-sub {
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 12rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.info-row {
+  font-size: 26rpx;
+  line-height: 2;
+}
+
+.addr {
+  max-width: 460rpx;
+  text-align: right;
+}
+
+.copy {
+  color: var(--brand);
+  font-size: 24rpx;
+  margin-left: 16rpx;
+}
+
+.goods-item {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.goods-image {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  background: #EDEDED;
+  flex-shrink: 0;
+}
+
+.goods-body {
+  flex: 1;
+  margin-left: 20rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.goods-right {
+  text-align: right;
+  margin-left: 16rpx;
+}
+
+.footer-placeholder {
+  height: 150rpx;
+}
+
+.footer-bar {
+  justify-content: flex-end;
+}
+
+.footer-bar .action {
+  margin-left: 16rpx;
+  width: 240rpx;
+}

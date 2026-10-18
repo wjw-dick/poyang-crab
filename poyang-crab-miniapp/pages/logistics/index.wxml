@@ -1,0 +1,27 @@
+<view class="page">
+  <view class="card" wx:if="{{delivery}}">
+    <view class="row-between">
+      <view class="section-title">顺丰冷链</view>
+      <text class="copy" bindtap="onCopyExpressNo">复制单号</text>
+    </view>
+    <view class="info-row"><text class="text-sub">运单号</text> {{delivery.expressNo}}</view>
+    <view class="info-row" wx:if="{{delivery.shipTime}}"><text class="text-sub">发货时间</text> {{delivery.shipTime}}</view>
+    <view class="tip">鲜活湖蟹全程冷链，签收前请当面验货，死蟹包赔。</view>
+  </view>
+
+  <view class="card" wx:if="{{routes.length}}">
+    <view class="section-title">物流轨迹</view>
+    <view class="timeline">
+      <view class="timeline-item {{index === 0 ? 'active' : ''}}" wx:for="{{routes}}" wx:key="index">
+        <view class="timeline-dot"></view>
+        <view class="timeline-content">
+          <view class="timeline-remark">{{item.remark}}</view>
+          <view class="text-sub">{{item.acceptTime}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!loading && !delivery}}" class="empty">暂无物流信息，发货后可查看轨迹</view>
+  <view wx:elif="{{loading}}" class="empty">加载中…</view>
+</view>

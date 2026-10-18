@@ -1,0 +1,63 @@
+.header {
+  background: linear-gradient(135deg, #8A5A16, #B3822F);
+  color: #fff;
+  padding: 40rpx 32rpx;
+}
+
+.header-title {
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.header-sub {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 8rpx;
+}
+
+.rate-box {
+  text-align: right;
+}
+
+.rate-value {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.rate-label {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.dealer-item {
+  font-size: 27rpx;
+}
+
+.dealer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.status {
+  color: var(--brand);
+  font-size: 25rpx;
+}
+
+.line {
+  margin-top: 8rpx;
+}
+
+.call {
+  color: var(--brand);
+  margin-left: 8rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 24rpx 0;
+}
+
+.invite-btn {
+  width: 100%;
+  margin: 0;
+}

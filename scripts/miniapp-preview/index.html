@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小程序浏览器预览 · 螃蟹小公主</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <h1>小程序浏览器预览</h1>
+    <span class="tag">无需微信开发者工具</span>
+    <span class="hint">按真实 WXML / WXSS / JS 渲染，接口经 /api 反向代理直连本机后端 8080</span>
+    <span class="spacer"></span>
+    <span class="hint"><span id="backend-dot" class="status-dot"></span><span id="backend-text">后端检测中…</span></span>
+    <label>缩放
+      <select id="scale">
+        <option value="0">适应宽度</option>
+        <option value="0.6">60%</option>
+        <option value="0.75">75%</option>
+        <option value="1" selected>100%</option>
+        <option value="1.15">115%</option>
+      </select>
+    </label>
+    <button id="btn-reload-all">全部重新加载</button>
+  </div>
+
+  <div id="stage-root"></div>
+
+  <script src="runtime.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    (function () {
+      var root = document.getElementById('stage-root')
+      var devices = []
+
+      function fitScale() {
+        var sel = document.getElementById('scale')
+        var value = Number(sel.value)
+        if (value === 0) {
+          var available = Math.max(360, window.innerWidth - 80)
+          value = Math.min(1, available / (375 * 2 + 60))
+        }
+        document.documentElement.style.setProperty('--scale', String(value))
+      }
+
+      document.getElementById('scale').addEventListener('change', fitScale)
+      window.addEventListener('resize', fitScale)
+
+      fetch('/api/actuator/health', { cache: 'no-store' })
+        .then(function (r) { return r.json() })
+        .then(function (body) {
+          var up = body && body.status === 'UP'
+          document.getElementById('backend-dot').className = 'status-dot ' + (up ? 'up' : 'down')
+          document.getElementById('backend-text').textContent = up
+            ? '后端 :8080 正常'
+            : '后端异常：' + JSON.stringify(body)
+        })
+        .catch(function () {
+          document.getElementById('backend-dot').className = 'status-dot down'
+          document.getElementById('backend-text').textContent = '后端未启动（先运行 scripts\\start-all.bat）'
+        })
+
+      // 双端并排：#miniapp / #channel 可指定只显示一端
+      var hash = location.hash.replace('#', '')
+      var keys = hash === 'miniapp' || hash === 'channel' ? [hash] : ['miniapp', 'channel']
+
+      MiniPreviewUI.mount(root, keys).then(function (list) {
+        devices = list
+        fitScale()
+      })
+
+      document.getElementById('btn-reload-all').addEventListener('click', function () {
+        devices.forEach(function (d) {
+          d.boot(d.currentPath || (d.appJson.pages || [])[0])
+        })
+      })
+    })()
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<view class="page">
+  <view class="search-bar">
+    <view class="search-input">
+      <input value="{{keyword}}" placeholder="搜索湖蟹商品" confirm-type="search" bindinput="onSearchInput" bindconfirm="onSearch" />
+    </view>
+  </view>
+
+  <view class="product-card" wx:for="{{products}}" wx:key="productId">
+    <view class="row-between product-head" data-id="{{item.productId}}" bindtap="onToggle">
+      <view class="row">
+        <image class="product-image" src="{{item.mainImage}}" mode="aspectFill" />
+        <view class="product-info">
+          <view class="ellipsis-2">{{item.productName}}</view>
+          <view class="text-sub">{{item.origin || '鄱阳湖产区'}} · 起订 {{item.minOrderQty || 10}} 件</view>
+        </view>
+      </view>
+      <text class="toggle">{{expandedId === item.productId ? '收起' : '选规格'}}</text>
+    </view>
+
+    <view wx:if="{{expandedId === item.productId}}" class="sku-list">
+      <view class="sku-item" wx:for="{{item.skus}}" wx:for-item="sku" wx:key="skuId">
+        <image class="sku-image" src="{{sku.image || item.mainImage}}" mode="aspectFill" />
+        <view class="sku-body">
+          <view class="ellipsis">{{sku.skuName}}</view>
+          <view class="text-sub">零售价 ¥{{sku.retailPriceText}} · 可赚 ¥{{sku.benefit}}</view>
+        </view>
+        <view class="sku-right">
+          <view class="price"><text class="price-symbol">¥</text><text class="price-int">{{sku.channelPriceText}}</text></view>
+          <view
+            class="btn-primary add-btn"
+            data-product-id="{{item.productId}}"
+            data-skuid="{{sku.skuId}}"
+            data-name="{{sku.skuName}}"
+            data-price="{{sku.channelPrice}}"
+            data-image="{{sku.image || item.mainImage}}"
+            catchtap="onAddDraft"
+          >加入报单</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!products.length && !loading}}" class="empty">暂无可批发的湖蟹商品</view>
+  <view wx:if="{{loading}}" class="text-sub loading">加载中…</view>
+
+  <view class="footer-placeholder" wx:if="{{draftCount}}"></view>
+  <view class="footer-bar" wx:if="{{draftCount}}">
+    <view class="draft-info">报单草稿：{{draftCount}} 个规格</view>
+    <button class="btn-primary submit-btn" bindtap="onGoReport">去报单</button>
+  </view>
+</view>

@@ -1,0 +1,11 @@
+<view class="page" wx:if="{{article}}">
+  <view class="article">
+    <view class="title">{{article.title}}</view>
+    <view class="meta text-sub">{{article.author || '螃蟹小公主'} · {{article.publishTimeText}}</view>
+    <image wx:if="{{article.coverImage}}" class="cover" src="{{article.coverImage}}" mode="widthFix" />
+    <rich-text class="rich" nodes="{{article.contentHtml}}"></rich-text>
+  </view>
+</view>
+
+<view wx:elif="{{!loading}}" class="empty">内容不存在或已下架</view>
+<view wx:else class="empty">加载中…</view>

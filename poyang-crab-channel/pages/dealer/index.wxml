@@ -1,0 +1,45 @@
+<view class="page">
+  <view class="header">
+    <view class="row-between">
+      <view>
+        <view class="header-title">我的团队</view>
+        <view class="header-sub">下级经销商 {{childCount}} 家</view>
+      </view>
+      <view class="rate-box">
+        <view class="rate-value">{{referralRateText}}</view>
+        <view class="rate-label">转介绍返佣</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card dealer-item" wx:for="{{dealers}}" wx:key="id">
+    <view class="row-between">
+      <view>
+        <view class="dealer-name">{{item.channelName}}</view>
+        <view class="text-sub">{{item.channelNo || '—'}} · {{item.channelLevel || '普通'}}</view>
+      </view>
+      <text class="status">{{item.statusText}}</text>
+    </view>
+    <view class="row-between line">
+      <text class="text-sub">联系人</text>
+      <text>{{item.contactName || '—'}} <text class="call" data-mobile="{{item.contactMobile}}" bindtap="onCallDealer">{{item.contactMobile || ''}}</text></text>
+    </view>
+    <view class="row-between line">
+      <text class="text-sub">自身分佣 / 返佣</text>
+      <text>{{item.commissionRateText}} / {{item.referralRateText}}</text>
+    </view>
+    <view class="row-between line">
+      <text class="text-sub">已用额度</text>
+      <text>¥{{item.usedQuotaText}}</text>
+    </view>
+    <view class="line text-sub">加入时间：{{item.timeText}}</view>
+  </view>
+
+  <view wx:if="{{!dealers.length && !loading}}" class="empty">还没有下级经销商</view>
+  <view wx:if="{{loading}}" class="text-sub loading">加载中…</view>
+
+  <view class="footer-placeholder"></view>
+  <view class="footer-bar">
+    <button class="btn-primary invite-btn" bindtap="onInvite">邀请下级经销商</button>
+  </view>
+</view>

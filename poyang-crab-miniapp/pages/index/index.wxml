@@ -1,0 +1,84 @@
+<view class="page">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <text class="search-icon">搜索</text>
+      <input
+        value="{{keyword}}"
+        placeholder="搜公母 · 重量档 · 礼盒"
+        confirm-type="search"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+    </view>
+  </view>
+
+  <!-- 分类横滑 -->
+  <scroll-view class="category-bar" scroll-x enable-flex>
+    <view
+      class="category-item {{activeCategoryId === null ? 'active' : ''}}"
+      data-id=""
+      bindtap="onCategoryTap"
+    >全部</view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="category-item {{activeCategoryId === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onCategoryTap"
+    >{{item.categoryName}}</view>
+  </scroll-view>
+
+  <!-- 直播间关联商品 -->
+  <view wx:if="{{lives.length}}" class="live-card" bindtap="onLiveTap">
+    <view class="live-left">
+      <text class="tag">直播中</text>
+      <view class="live-title">{{lives[0].roomName || '鄱阳湖开湖直播'}}</view>
+      <view class="text-sub">看开湖现捕 · 直播专享价</view>
+    </view>
+    <view class="live-right btn-plain">进入直播</view>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="product-grid">
+    <view
+      wx:for="{{products}}"
+      wx:key="id"
+      class="product-card"
+      data-id="{{item.id}}"
+      bindtap="onProductTap"
+    >
+      <image class="product-image" src="{{item.mainImage}}" mode="aspectFill" lazy-load />
+      <view class="product-body">
+        <view class="product-name ellipsis-2">{{item.productName}}</view>
+        <view class="product-tags">
+          <text wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</text>
+        </view>
+        <view class="row-between">
+          <view class="price">
+            <text class="price-symbol">¥</text><text class="price-int">{{item.priceParts.int}}</text><text class="price-symbol">.{{item.priceParts.decimal}}</text>
+          </view>
+          <view class="text-sub">已售{{item.salesCount || 0}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!products.length && !loading}}" class="empty">暂无在架湖蟹，敬请期待开湖</view>
+  <view wx:if="{{loading}}" class="text-sub load-more">加载中…</view>
+  <view wx:elif="{{finished && products.length}}" class="text-sub load-more">没有更多了</view>
+
+  <!-- 品牌内容 -->
+  <view wx:if="{{articles.length}}" class="article-block">
+    <view class="article-title">品牌故事</view>
+    <view
+      wx:for="{{articles}}"
+      wx:key="id"
+      class="article-item ellipsis"
+      data-id="{{item.id}}"
+      bindtap="onArticleTap"
+    >· {{item.title}}</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

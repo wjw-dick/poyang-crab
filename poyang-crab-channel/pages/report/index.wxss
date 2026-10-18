@@ -1,0 +1,98 @@
+.tabs {
+  display: flex;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  padding: 24rpx 0;
+  color: var(--text-sub);
+}
+
+.tab.active {
+  color: var(--brand);
+  font-weight: 600;
+  border-bottom: 4rpx solid var(--brand);
+}
+
+.hint {
+  margin: 20rpx 24rpx;
+  padding: 16rpx 20rpx;
+  font-size: 24rpx;
+  color: #8A5A16;
+  background: var(--brand-light);
+  border-radius: 10rpx;
+}
+
+.draft-item {
+  display: flex;
+  position: relative;
+}
+
+.draft-image {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 12rpx;
+  background: #EDEDED;
+  flex-shrink: 0;
+}
+
+.draft-body {
+  flex: 1;
+  margin-left: 20rpx;
+  font-size: 27rpx;
+  line-height: 1.5;
+}
+
+.draft-bottom {
+  margin-top: 20rpx;
+}
+
+.draft-remove {
+  position: absolute;
+  right: 20rpx;
+  top: 16rpx;
+  font-size: 34rpx;
+  color: var(--text-sub);
+  padding: 0 10rpx;
+}
+
+.clear {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.submit-btn {
+  width: 320rpx;
+  margin: 0;
+}
+
+.go-product {
+  margin-top: 32rpx;
+  width: 340rpx;
+}
+
+.report-item {
+  font-size: 27rpx;
+  line-height: 2;
+}
+
+.report-line {
+  margin-top: 8rpx;
+}
+
+.status {
+  color: var(--brand);
+  font-size: 26rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 24rpx 0;
+}

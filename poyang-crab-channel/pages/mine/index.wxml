@@ -1,0 +1,45 @@
+<view class="page">
+  <view class="header">
+    <view class="channel-name">{{channel.channelName || '渠道商'}}</view>
+    <view class="channel-meta">
+      <text bindtap="onCopyChannelNo">编号 {{channel.channelNo || '—'}}</text>
+      <text class="status-tag">{{statusText}}</text>
+    </view>
+  </view>
+
+  <view class="assets">
+    <view class="asset-item">
+      <view class="asset-value">¥{{usedQuotaText}}</view>
+      <view class="text-sub">已用额度</view>
+    </view>
+    <view class="asset-item">
+      <view class="asset-value">¥{{creditQuotaText}}</view>
+      <view class="text-sub">授信额度</view>
+    </view>
+    <view class="asset-item">
+      <view class="asset-value">¥{{pendingCommissionText}}</view>
+      <view class="text-sub">待结算佣金</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="row-between info-row"><text class="text-sub">联系人</text><text>{{channel.contactName || '—'}}</text></view>
+    <view class="row-between info-row"><text class="text-sub">联系电话</text><text>{{channel.contactMobile || '—'}}</text></view>
+    <view class="row-between info-row"><text class="text-sub">渠道等级</text><text>{{channel.channelLevel || '—'}}</text></view>
+    <view class="row-between info-row"><text class="text-sub">下级经销商</text><text>{{overview.childCount || 0}} 家</text></view>
+  </view>
+
+  <view class="card">
+    <view class="row-between link-row" wx:for="{{links}}" wx:key="key" data-url="{{item.url}}" bindtap="onLinkTap">
+      <text>{{item.label}}</text><text class="text-sub">></text>
+    </view>
+    <view class="row-between link-row" bindtap="onCallService">
+      <text>联系平台客服</text><text class="text-sub">></text>
+    </view>
+    <view class="row-between link-row" bindtap="onLogout">
+      <text>退出登录</text><text class="text-sub">></text>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

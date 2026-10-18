@@ -1,0 +1,29 @@
+<view class="login">
+  <view class="logo">螃蟹小公主</view>
+  <view class="slogan">鄱阳湖湖蟹 · 产地直发 · 鲜活冷链</view>
+
+  <view class="login-box">
+    <button class="btn-primary login-btn" disabled="{{loading}}" bindtap="onLogin">
+      {{loading ? '登录中…' : '微信一键登录'}}
+    </button>
+    <button class="btn-plain phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhone">
+      手机号快捷绑定
+    </button>
+  </view>
+
+  <view class="agreement">
+    <checkbox-group bindchange="onAgreeChange">
+      <label class="agree-label">
+        <checkbox value="1" checked="{{agreed}}" color="#0B3D91" />
+        <text>我已阅读并同意</text>
+      </label>
+    </checkbox-group>
+    <text class="link" bindtap="onViewAgreement">《用户协议》与《隐私政策》</text>
+  </view>
+
+  <view class="tips text-sub">
+    登录即表示同意按 UnionID 打通小程序 / 公众号 / H5 会员权益
+  </view>
+
+  <view class="service text-sub" wx:if="{{site.servicePhone}}">客服热线：{{site.servicePhone}}</view>
+</view>

@@ -1,0 +1,78 @@
+<view class="page" wx:if="{{order}}">
+  <!-- 状态条 -->
+  <view class="status-bar">
+    <view class="status-text">{{order.statusText}}</view>
+    <view class="text-sub status-sub" wx:if="{{order.orderStatus === 'UNPAID'}}">请在超时前完成支付，逾期订单将自动取消并释放库存</view>
+    <view class="text-sub status-sub" wx:elif="{{order.orderStatus === 'PAID'}}">已支付，正在鲜活打包，预计 24 小时内发出</view>
+    <view class="text-sub status-sub" wx:elif="{{order.orderStatus === 'SORTING'}}">正在按公母 / 重量档分拣</view>
+    <view class="text-sub status-sub" wx:elif="{{order.orderStatus === 'PACKED'}}">已打包完毕，等待顺丰冷链揽收</view>
+    <view class="text-sub status-sub" wx:elif="{{order.orderStatus === 'SHIPPED'}}">湖蟹已发出，请留意冷链到货时间</view>
+    <view class="text-sub status-sub" wx:elif="{{order.orderStatus === 'RECEIVED'}}">已收货，欢迎发表评价</view>
+  </view>
+
+  <!-- 收货信息 -->
+  <view class="card">
+    <view class="section-title">收货信息</view>
+    <view class="row-between info-row"><text class="text-sub">收货人</text><text>{{order.receiverName}}</text></view>
+    <view class="row-between info-row"><text class="text-sub">联系电话</text><text>{{order.receiverMobile}}</text></view>
+    <view class="row-between info-row"><text class="text-sub">收货地址</text><text class="addr">{{order.receiverAddress}}</text></view>
+  </view>
+
+  <!-- 商品 -->
+  <view class="card">
+    <view class="section-title">商品清单</view>
+    <view class="goods-item" wx:for="{{items}}" wx:key="id">
+      <image class="goods-image" src="{{item.image}}" mode="aspectFill" />
+      <view class="goods-body">
+        <view class="ellipsis-2">{{item.productName}}</view>
+        <view class="text-sub">{{item.skuName}} {{item.specDesc || ''}}</view>
+      </view>
+      <view class="goods-right">
+        <view class="price"><text class="price-symbol">¥</text>{{item.priceText}}</view>
+        <view class="text-sub">x{{item.qty}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 物流 -->
+  <view class="card" wx:if="{{delivery}}">
+    <view class="row-between">
+      <view class="section-title">顺丰冷链</view>
+      <view class="text-sub" bindtap="onLogistics">查看轨迹</view>
+    </view>
+    <view class="info-row"><text class="text-sub">运单号</text> {{delivery.expressNo || '待生成'}}</view>
+    <view class="info-row" wx:if="{{delivery.shipTimeText}}"><text class="text-sub">发货时间</text> {{delivery.shipTimeText}}</view>
+    <view class="info-row" wx:if="{{delivery.packCheck}}"><text class="text-sub">打包核验</text> {{delivery.packCheck}}</view>
+  </view>
+
+  <!-- 金额 -->
+  <view class="card">
+    <view class="row-between info-row"><text>商品金额</text><text>¥{{order.totalAmountText}}</text></view>
+    <view class="row-between info-row"><text>冷链运费</text><text>¥{{order.freightText}}</text></view>
+    <view class="row-between info-row"><text>优惠</text><text>-¥{{order.discountText}}</text></view>
+    <view class="row-between info-row"><text>实付</text><text class="price">¥{{order.amountText}}</text></view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="card">
+    <view class="row-between info-row">
+      <text class="text-sub">订单号</text>
+      <view><text>{{order.orderNo}}</text><text class="copy" bindtap="onCopyOrderNo">复制</text></view>
+    </view>
+    <view class="row-between info-row"><text class="text-sub">下单时间</text><text>{{order.timeText}}</text></view>
+    <view class="row-between info-row" wx:if="{{order.remark}}"><text class="text-sub">备注</text><text>{{order.remark}}</text></view>
+  </view>
+
+  <view class="footer-placeholder"></view>
+</view>
+
+<view wx:elif="{{!loading}}" class="empty">订单不存在或已删除</view>
+<view wx:else class="empty">加载中…</view>
+
+<view class="footer-bar" wx:if="{{order}}">
+  <view wx:if="{{actions.canCancel}}" class="btn-plain action" bindtap="onCancel">取消订单</view>
+  <button wx:if="{{actions.canPay}}" class="btn-primary action" bindtap="onPay">立即支付</button>
+  <view wx:if="{{actions.canLogistics}}" class="btn-plain action" bindtap="onLogistics">物流轨迹</view>
+  <button wx:if="{{actions.canConfirm}}" class="btn-primary action" bindtap="onConfirm">确认收货</button>
+  <button wx:if="{{actions.canReview}}" class="btn-plain action" bindtap="onReview">发表评价</button>
+</view>

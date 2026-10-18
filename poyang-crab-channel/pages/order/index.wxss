@@ -1,0 +1,60 @@
+.tabs {
+  display: flex;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  padding: 24rpx 0;
+  color: var(--text-sub);
+}
+
+.tab.active {
+  color: var(--brand);
+  font-weight: 600;
+  border-bottom: 4rpx solid var(--brand);
+}
+
+.order-card {
+  font-size: 27rpx;
+  line-height: 2;
+}
+
+.status {
+  color: var(--brand);
+  font-size: 26rpx;
+}
+
+.order-line {
+  margin-top: 4rpx;
+}
+
+.detail-toggle {
+  color: var(--brand);
+  font-size: 24rpx;
+}
+
+.detail-list {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid var(--line);
+}
+
+.detail-item {
+  padding: 8rpx 0;
+  font-size: 26rpx;
+}
+
+.detail-name {
+  max-width: 460rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 24rpx 0;
+}

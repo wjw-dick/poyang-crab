@@ -1,0 +1,66 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'settlement' ? 'active' : ''}}" data-tab="settlement" bindtap="onTabTap">结算单</view>
+    <view class="tab {{tab === 'quota' ? 'active' : ''}}" data-tab="quota" bindtap="onTabTap">额度流水</view>
+  </view>
+
+  <block wx:if="{{tab === 'settlement'}}">
+    <!-- 生成结算单 -->
+    <view class="card">
+      <view class="section-title">生成结算单</view>
+      <view class="row-between period-row">
+        <picker mode="date" value="{{periodStart}}" bindchange="onStartChange">
+          <view class="picker">{{periodStart || '开始日期'}}</view>
+        </picker>
+        <text class="tilde">~</text>
+        <picker mode="date" value="{{periodEnd}}" bindchange="onEndChange">
+          <view class="picker">{{periodEnd || '结束日期'}}</view>
+        </picker>
+      </view>
+      <button class="btn-primary create-btn" disabled="{{creating}}" bindtap="onCreate">
+        {{creating ? '生成中…' : '按周期生成结算单'}}
+      </button>
+      <view class="text-sub hint">结算金额 = 该周期内待结算佣金合计（T30 对账口径）</view>
+    </view>
+
+    <view class="card settlement-item" wx:for="{{settlements}}" wx:key="id">
+      <view class="row-between">
+        <text class="settle-no">{{item.settleNo}}</text>
+        <text class="status">{{item.statusText}}</text>
+      </view>
+      <view class="line text-sub">结算周期：{{item.periodText}}</view>
+      <view class="row-between line">
+        <text class="text-sub">佣金合计</text>
+        <text>¥{{item.commissionAmountText}}</text>
+      </view>
+      <view class="row-between line">
+        <text class="text-sub">应结金额</text>
+        <text class="price">¥{{item.settleAmountText}}</text>
+      </view>
+      <view class="row-between line">
+        <text class="text-sub">{{item.timeText}}</text>
+        <view wx:if="{{item.status === 'DRAFT'}}" class="btn-primary confirm-btn" data-no="{{item.settleNo}}" bindtap="onConfirm">确认结算</view>
+      </view>
+    </view>
+
+    <view wx:if="{{!settlements.length && !loading}}" class="empty">暂无结算单</view>
+  </block>
+
+  <block wx:else>
+    <view class="card quota-item" wx:for="{{quotaLogs}}" wx:key="id">
+      <view class="row-between">
+        <text>{{item.changeType || '额度变动'}}</text>
+        <text class="amount">{{item.amountText}}</text>
+      </view>
+      <view class="line text-sub">变动前 ¥{{item.beforeText}} → 变动后 ¥{{item.afterText}}</view>
+      <view class="row-between line">
+        <text class="text-sub">业务单号：{{item.bizNo || '—'}}</text>
+        <text class="text-sub">{{item.timeText}}</text>
+      </view>
+    </view>
+    <view wx:if="{{!quotaLogs.length && !loading}}" class="empty">暂无额度流水</view>
+  </block>
+
+  <view wx:if="{{loading}}" class="text-sub loading">加载中…</view>
+  <view wx:elif="{{tab === 'settlement' && finished && settlements.length}}" class="text-sub loading">没有更多了</view>
+</view>

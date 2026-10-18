@@ -1,0 +1,107 @@
+.banner {
+  width: 100%;
+  height: 750rpx;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  font-size: 34rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 12rpx 0 8rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.spec-label {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  margin-bottom: 16rpx;
+}
+
+.spec-options {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.spec-option {
+  padding: 12rpx 32rpx;
+  margin: 0 16rpx 16rpx 0;
+  font-size: 26rpx;
+  background: #F5F6F8;
+  border: 1rpx solid #F5F6F8;
+  border-radius: 8rpx;
+}
+
+.spec-option.active {
+  color: var(--brand);
+  background: var(--brand-light);
+  border-color: var(--brand);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1rpx solid var(--line);
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.stepper-btn {
+  width: 64rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  font-size: 32rpx;
+  background: #F5F6F8;
+}
+
+.stepper-value {
+  width: 90rpx;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.review-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--line);
+}
+
+.review-user {
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.review-content {
+  font-size: 26rpx;
+  line-height: 1.6;
+  margin-top: 8rpx;
+}
+
+.empty-inline {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.footer-placeholder {
+  height: 140rpx;
+}
+
+.footer-icon {
+  flex: 1;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.footer-buy {
+  flex: 2;
+  margin: 0 0 0 16rpx;
+}

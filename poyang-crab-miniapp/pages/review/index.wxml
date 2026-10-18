@@ -1,0 +1,62 @@
+<view class="page">
+  <view class="card" wx:if="{{order}}">
+    <view class="section-title">订单 {{order.orderNo}}</view>
+    <view class="text-sub">下单时间：{{order.createTime}}</view>
+  </view>
+
+  <!-- 评分 -->
+  <view class="card">
+    <view class="section-title">总体评分</view>
+    <view class="stars">
+      <text
+        wx:for="{{[1,2,3,4,5]}}"
+        wx:key="*this"
+        class="star {{score >= item ? 'active' : ''}}"
+        data-score="{{item}}"
+        bindtap="onScoreTap"
+      >★</text>
+      <text class="score-text">{{score}} 分</text>
+    </view>
+  </view>
+
+  <!-- 鲜活度（湖蟹核心指标，1-5 与后端 survival_rate 一致） -->
+  <view class="card">
+    <view class="section-title">湖蟹鲜活度</view>
+    <view class="stars">
+      <text
+        wx:for="{{[1,2,3,4,5]}}"
+        wx:key="*this"
+        class="star {{survivalRate >= item ? 'active' : ''}}"
+        data-rate="{{item}}"
+        bindtap="onSurvivalTap"
+      >★</text>
+      <text class="score-text">{{survivalRate}} / 5</text>
+    </view>
+  </view>
+
+  <!-- 评价内容 -->
+  <view class="card">
+    <view class="section-title">评价内容</view>
+    <textarea
+      class="content"
+      value="{{content}}"
+      maxlength="500"
+      placeholder="公母、规格、鲜活度、包装与配送体验…"
+      bindinput="onContentInput"
+    />
+    <view class="image-list">
+      <view class="image-item" wx:for="{{images}}" wx:key="index">
+        <image src="{{item}}" mode="aspectFill" data-url="{{item}}" bindtap="onPreviewImage" />
+        <view class="image-remove" data-index="{{index}}" catchtap="onRemoveImage">×</view>
+      </view>
+      <view class="image-add" wx:if="{{images.length < 6}}" bindtap="onChooseImage">+</view>
+    </view>
+  </view>
+
+  <view class="footer-placeholder"></view>
+  <view class="footer-bar">
+    <button class="btn-primary submit-btn" disabled="{{submitting}}" bindtap="onSubmit">
+      {{submitting ? '提交中…' : '提交评价'}}
+    </button>
+  </view>
+</view>

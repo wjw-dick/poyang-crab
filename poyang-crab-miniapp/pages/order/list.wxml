@@ -1,0 +1,41 @@
+<view class="page">
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab {{activeStatus === item.value ? 'active' : ''}}"
+      data-value="{{item.value}}"
+      bindtap="onTabTap"
+    >{{item.label}}</view>
+  </view>
+
+  <view wx:for="{{orders}}" wx:key="orderNo" class="card order-card">
+    <view class="row-between order-head" data-no="{{item.orderNo}}" bindtap="onOrderTap">
+      <text class="text-sub">{{item.timeText}}</text>
+      <text class="status">{{item.statusText}}</text>
+    </view>
+
+    <view class="order-main" data-no="{{item.orderNo}}" bindtap="onOrderTap">
+      <view class="text-sub ellipsis">订单号：{{item.orderNo}}</view>
+      <view class="row-between order-amount">
+        <text class="text-sub">{{item.bizMode === 'WHOLESALE' ? '批发' : '零售'}}</text>
+        <text class="price"><text class="price-symbol">¥</text>{{item.amountText}}</text>
+      </view>
+    </view>
+
+    <view class="order-actions">
+      <view wx:if="{{item.canCancel}}" class="btn-plain action" data-no="{{item.orderNo}}" bindtap="onCancel">取消订单</view>
+      <view wx:if="{{item.canPay}}" class="btn-primary action" data-no="{{item.orderNo}}" bindtap="onPay">立即支付</view>
+      <view wx:if="{{item.canLogistics}}" class="btn-plain action" data-no="{{item.orderNo}}" bindtap="onLogistics">物流轨迹</view>
+      <view wx:if="{{item.canConfirm}}" class="btn-primary action" data-no="{{item.orderNo}}" bindtap="onConfirm">确认收货</view>
+      <view wx:if="{{item.canReview}}" class="btn-plain action" data-no="{{item.orderNo}}" bindtap="onReview">发表评价</view>
+    </view>
+  </view>
+
+  <view wx:if="{{!orders.length && !loading}}" class="empty">
+    <view>暂无相关订单</view>
+    <button class="btn-plain go-shopping" bindtap="onGoShopping">去挑湖蟹</button>
+  </view>
+  <view wx:if="{{loading}}" class="text-sub load-more">加载中…</view>
+  <view wx:elif="{{finished && orders.length}}" class="text-sub load-more">没有更多了</view>
+</view>

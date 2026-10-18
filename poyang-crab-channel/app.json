@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/product/index",
+    "pages/report/index",
+    "pages/mine/index",
+    "pages/order/index",
+    "pages/commission/index",
+    "pages/settlement/index",
+    "pages/dealer/index",
+    "pages/login/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#8A5A16",
+    "navigationBarTitleText": "螃蟹小公主 · 渠道商",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F6F8"
+  },
+  "tabBar": {
+    "color": "#8C8C8C",
+    "selectedColor": "#8A5A16",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "工作台" },
+      { "pagePath": "pages/product/index", "text": "渠道价" },
+      { "pagePath": "pages/report/index", "text": "报单" },
+      { "pagePath": "pages/mine/index", "text": "我的" }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

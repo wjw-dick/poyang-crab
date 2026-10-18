@@ -1,0 +1,40 @@
+<view class="page">
+  <block wx:if="{{items.length}}">
+    <view class="card cart-item" wx:for="{{items}}" wx:key="index">
+      <view
+        class="check {{item.checked ? 'checked' : ''}}"
+        data-key="{{item.id || item.skuId || item.productId}}"
+        bindtap="onToggle"
+      >{{item.checked ? '√' : ''}}</view>
+      <image class="cart-image" src="{{item.image}}" mode="aspectFill" />
+      <view class="cart-body">
+        <view class="cart-name ellipsis-2">{{item.productName}}</view>
+        <view class="text-sub">{{item.specText}}</view>
+        <view class="row-between cart-bottom">
+          <view class="price"><text class="price-symbol">¥</text><text class="price-int">{{item.price}}</text></view>
+          <view class="stepper">
+            <view class="stepper-btn" data-key="{{item.id || item.skuId || item.productId}}" data-delta="-1" bindtap="onQuantityChange">-</view>
+            <view class="stepper-value">{{item.quantity}}</view>
+            <view class="stepper-btn" data-key="{{item.id || item.skuId || item.productId}}" data-delta="1" bindtap="onQuantityChange">+</view>
+          </view>
+        </view>
+        <view class="remove" data-key="{{item.id || item.skuId || item.productId}}" bindtap="onRemove">删除</view>
+      </view>
+    </view>
+
+    <view class="footer-placeholder"></view>
+    <view class="footer-bar">
+      <view class="check {{allChecked ? 'checked' : ''}}" bindtap="onToggleAll">{{allChecked ? '√' : ''}}</view>
+      <view class="all-label" bindtap="onToggleAll">全选</view>
+      <view class="total">
+        合计：<text class="price"><text class="price-symbol">¥</text><text class="price-int">{{totalParts.int}}</text><text class="price-symbol">.{{totalParts.decimal}}</text></text>
+      </view>
+      <button class="btn-primary checkout-btn" bindtap="onCheckout">去结算</button>
+    </view>
+  </block>
+
+  <view wx:else class="empty">
+    <view>购物车还是空的</view>
+    <button class="btn-plain go-shopping" bindtap="onGoShopping">去挑湖蟹</button>
+  </view>
+</view>

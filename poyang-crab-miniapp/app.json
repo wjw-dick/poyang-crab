@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/product/detail",
+    "pages/cart/index",
+    "pages/order/confirm",
+    "pages/order/list",
+    "pages/order/detail",
+    "pages/logistics/index",
+    "pages/review/index",
+    "pages/article/index",
+    "pages/member/index",
+    "pages/login/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0B3D91",
+    "navigationBarTitleText": "螃蟹小公主",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F6F8"
+  },
+  "tabBar": {
+    "color": "#8C8C8C",
+    "selectedColor": "#0B3D91",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "商城" },
+      { "pagePath": "pages/cart/index", "text": "购物车" },
+      { "pagePath": "pages/order/list", "text": "订单" },
+      { "pagePath": "pages/member/index", "text": "我的" }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于自动填写收货地址所在区域，更好地安排湖蟹冷链配送"
+    }
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}
