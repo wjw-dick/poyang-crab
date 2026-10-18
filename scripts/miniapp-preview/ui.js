@@ -15,6 +15,14 @@
       tokenKey: 'CRAB_TOKEN',
       userKey: 'CRAB_USER',
       profileUrl: '/api/member/profile',
+      // 详情类页面必须带参数才能看到内容，这里给出演示数据的默认参数（真实小程序由上一页跳转时携带）
+      defaultQuery: {
+        'pages/product/detail': 'id=1',
+        'pages/article/index': 'id=1',
+        'pages/order/detail': 'orderNo=DD202610100001',
+        'pages/logistics/index': 'orderNo=DD202610100001',
+        'pages/review/index': 'orderNo=DD202610100001'
+      },
       logins: [
         { id: 0, label: '未登录（仅公开页有数据）' },
         { id: 1, label: '会员1 · 鄱阳湖畔的吃货（GOLD）' },
@@ -30,6 +38,7 @@
       tokenKey: 'CHANNEL_TOKEN',
       userKey: 'CHANNEL_INFO',
       profileUrl: '/api/channel/biz/profile',
+      defaultQuery: {},
       logins: [
         { id: 0, label: '未登录（会跳登录页）' },
         { id: 1, label: '渠道1 · 南昌蟹逅商贸有限公司' },
@@ -59,7 +68,7 @@
       app: null,
       appJson: {},
       currentPath: '',
-      loginId: 0
+      loginId: 1
     }
 
     var root = el('div', 'device')
@@ -83,6 +92,7 @@
     })
     var pageSel = document.createElement('select')
     pageSel.className = 'mini-select'
+    loginSel.value = String(device.loginId)
     var btnReload = el('button', 'mini-btn', '重新加载')
     var btnClear = el('button', 'mini-btn', '清空本地缓存')
     var btnPopout = el('a', 'mini-btn', '独立窗口')
@@ -221,6 +231,13 @@
       })
     }
 
+    // 详情页带上演示参数，避免「预览时一片空白」
+    function pageUrl(p) {
+      var q = (config.defaultQuery || {})[p]
+      return '/' + p + (q ? '?' + q : '')
+    }
+    device.pageUrl = pageUrl
+
     function renderPageList() {
       pages.innerHTML = ''
       var list = device.appJson.pages || []
@@ -230,7 +247,7 @@
         chip.setAttribute('data-path', p)
         chip.title = p
         chip.addEventListener('click', function () {
-          if (device.app) device.app.navigate('/' + p, device.app.isTabPage(p) ? 'tab' : 'push')
+          if (device.app) device.app.navigate(pageUrl(p), device.app.isTabPage(p) ? 'tab' : 'push')
         })
         pages.appendChild(chip)
       })
@@ -246,7 +263,7 @@
     // ---- 交互 ----
     pageSel.addEventListener('change', function () {
       var p = pageSel.value
-      if (device.app) device.app.navigate('/' + p, device.app.isTabPage(p) ? 'tab' : 'push')
+      if (device.app) device.app.navigate(pageUrl(p), device.app.isTabPage(p) ? 'tab' : 'push')
     })
     loginSel.addEventListener('change', function () {
       device.loginId = Number(loginSel.value)
@@ -338,6 +355,7 @@
       wrap.appendChild(device.root)
     })
     // 全部就绪后启动（顺序：注入默认登录态 → boot）
+    global.__previewDevices = devices
     return Promise.all(devices.map(function (d) { return d.ready })).then(function () {
       return devices.reduce(function (chain, device) {
         return chain.then(function () {

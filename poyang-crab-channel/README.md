@@ -45,11 +45,32 @@ poyang-crab-channel/
 
 > **安全约定**：渠道端所有接口的 `channelId` 都由后端从登录态解析（`CurrentUserHolder.channelId()`），前端不传也不应传，避免越权查看他人数据。
 
-## 本地运行
+## 本地运行（开发模式，不使用 Docker）
 
-1. 微信开发者工具「导入项目」，选择本目录，替换 `project.config.json` 中的 AppID。
-2. `config/index.js` 的 `ENV = 'dev'`，勾选「不校验合法域名」。
-3. 前置数据：后台「渠道商管理」中维护渠道商档案，并填入渠道商的 `union_id`；否则登录会提示未绑定渠道档案。
+### 方式一：微信开发者工具（真机能力 / 正式联调）
+
+1. **先起后端**：`scripts\start-backend.bat`（或 `start-all.bat`），确认 `http://localhost:8080/api/actuator/health` 返回 `{"status":"UP"}`。
+2. **打开工具**：微信开发者工具 → 「+」→ **导入项目** → 目录选本目录 `poyang-crab-channel`。
+3. **填 AppID**：换成渠道端小程序 AppID（占位符为 `wxPLACEHOLDER1111`）；渠道端若复用同一小程序，AppID 与 C 端一致也可，登录靠 `source=CHANNEL` 区分。
+4. **本地设置**：勾选 **不校验合法域名、web-view（业务域名）、TLS 版本以及 HTTPS 证书**（`config/index.js` 的 `ENV = 'dev'` → `http://localhost:8080/api`）。
+5. **编译**：点「编译」。内置 3 个编译模式（工作台 / 报单 / 渠道价），见 `project.config.json` 的 `condition`。
+6. **登录前置数据（关键）**：渠道端登录按 `t_channel.union_id` 匹配渠道档案 —— 先在后台「渠道商管理」创建渠道商并把该微信号的 UnionID 写入 `union_id`，否则登录会被拒绝（提示「未绑定渠道商档案」）。
+7. **数据**：`scripts\init-db.bat -Force -WithDemo` 可灌演示数据（含渠道 1/2、报单、佣金、结算、额度流水）。
+
+> `tabBar` 未内置图标（避免提交二进制占位），正式发布前补 `iconPath` / `selectedIconPath`。
+
+### 方式二：浏览器等效预览（本机未装微信开发者工具时看效果）
+
+```bat
+scripts\preview-miniapp.bat
+:: 双端并排  http://localhost:8850/preview/#channel
+:: 单端大屏  http://localhost:8850/preview/single.html?app=channel
+```
+
+按**真实 WXML / WXSS / JS** 渲染，`/api` 反代到后端 `:8080`；顶部可切换「未登录 / 渠道 1（南昌蟹逅商贸）/ 渠道 2（九江鲜生优选）」，
+工作台额度、渠道专属价、报单、佣金、结算、下级经销商均能看到演示数据（登录态由本地签发的预览令牌注入，无需真实 UnionID）。
+
+> 原理、能力清单与已知边界见 [`scripts/miniapp-preview/README.md`](../scripts/miniapp-preview/README.md)。
 
 ## 已知待办（TODO）
 

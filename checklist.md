@@ -25,6 +25,8 @@
 - [ ] 冷链物流轨迹（顺丰单号）显示正确，收货评价可提交
 - [ ] 会员积分/储值/卡券/历史订单正常
 
+> 本机未安装微信开发者工具时：`scripts\preview-miniapp.bat` → `http://localhost:8850/preview/#miniapp`，浏览器按**真实 WXML/WXSS/JS** 逐页核对（已实测 11 页全部渲染、顶部可切换未登录/会员 1-3 注入登录态）；微信开发者工具导入步骤见 `poyang-crab-miniapp/README.md`，预览原理与边界见 `scripts/miniapp-preview/README.md`。
+
 ## 四、H5 分享页验收
 
 - [ ] 商品分享页/活动落地页可访问，与小程序同源数据一致
@@ -62,6 +64,8 @@
 - [ ] 分销佣金/转介绍返佣（比例后台可配置）、额度、订单、下级经销商管理正常
 - [ ] 对账、结算金额与后台数据一致
 - [ ] 后台「渠道商管理」：渠道档案、佣金规则、报单审核、结算正常
+
+> 渠道端同法预览：`http://localhost:8850/preview/#channel`（已实测 9 页全部渲染，登录态可切渠道 1/2）；微信开发者工具导入与「渠道档案 union_id」前置数据见 `poyang-crab-channel/README.md`。
 
 ## 八、技术栈验收
 

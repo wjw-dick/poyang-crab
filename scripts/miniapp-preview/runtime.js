@@ -60,6 +60,9 @@
   function evalExpr(expr, scope) {
     if (expr === undefined || expr === null) return undefined
     var src = String(expr).trim()
+    // 指令属性里写的是 {{expr}}（带花括号），求值前必须剥掉
+    var wrapped = /^\{\{([\s\S]*)\}\}$/.exec(src)
+    if (wrapped) src = wrapped[1].trim()
     if (!src) return ''
     try {
       return compileExpr(src)(scope)
@@ -288,7 +291,8 @@
         case 'src':
           if (el.tagName === 'IMG') {
             el.style.overflow = 'hidden'
-            if (value) {
+            // 演示数据里 images 常是 "[]"、空串，一律回退占位图，避免浏览器报 404
+            if (value && value !== '[]' && value !== '{}' && value !== 'null') {
               el.src = value
               el.addEventListener('error', function () { el.src = PLACEHOLDER_IMG }, { once: true })
             } else {
@@ -427,6 +431,7 @@
       appWxss: '',
       appInstance: null,
       pageStack: [],
+      pageOptionsCache: Object.create(null),
       onTitle: options.onTitle || function () {},
       onTabbar: options.onTabbar || function () {},
       onRoute: options.onRoute || function () {}
@@ -444,6 +449,7 @@
         return mod.exports
       }
       var dir = url.slice(0, url.lastIndexOf('/') + 1)
+      if (!/^[a-z]+:\/\//i.test(dir)) dir = global.location.origin + dir
       function requireFn(rel) {
         var target
         try { target = new URL(rel, dir).href } catch (e) { throw new Error('require 路径非法：' + rel) }
@@ -456,9 +462,12 @@
           'getCurrentPages', 'console', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval',
           src + '\n//# sourceURL=' + url
         )
-        fn.call(global, mod, mod.exports, requireFn, app.wx, app.__App, app.__Page, function () { return null },
-          function () { return app.pageStack }, console, global.setTimeout, global.clearTimeout,
-          global.setInterval, global.clearInterval)
+        fn.call(global, mod, mod.exports, requireFn, app.wx, app.__App, app.__Page,
+          function () { return null },                 // Component（本预览不支持自定义组件）
+          function () { return app.appInstance },      // getApp()
+          function () { return app.pageStack },        // getCurrentPages()
+          console,
+          global.setTimeout, global.clearTimeout, global.setInterval, global.clearInterval)
       } catch (e) {
         ctx.log('error', '模块执行失败：' + url + ' → ' + e.message, null)
         console.error('[mini-preview] module', url, e)
@@ -475,7 +484,11 @@
       try { instance.onLaunch && instance.onLaunch({ path: '', query: {} }) } catch (e) { console.error(e) }
       try { instance.onShow && instance.onShow({}) } catch (e) { console.error(e) }
     }
-    app.__Page = function (opts) { pendingPage = opts }
+    app.__Page = function (opts) {
+      pendingPage = opts
+      // 记住每个页面文件的 Page 配置：再次进入同一页面时模块已缓存，不会再执行 Page()
+      if (app.__loadingPageUrl) app.pageOptionsCache[app.__loadingPageUrl] = opts
+    }
 
     // ---------- 页面容器 ----------
     function ensureShadow() {
@@ -620,7 +633,9 @@
       app.currentPath = path
       app.currentQuery = query || {}
       var base = rootUrl + path
-      loadModule(base + '.js')
+      app.__loadingPageUrl = base + '.js'
+      loadModule(app.__loadingPageUrl)
+      if (!pendingPage) pendingPage = app.pageOptionsCache[app.__loadingPageUrl]
       if (!pendingPage) {
         ctx.log('error', '页面未注册（Page() 未执行）：' + path, null)
         return
@@ -654,8 +669,8 @@
 
     function reLaunch() {
       dropCache()
-      Object.keys(modules).forEach(function (k) { delete modules[k] })
       modules = Object.create(null)
+      app.pageOptionsCache = Object.create(null)
       app.appInstance = null
       boot()
     }

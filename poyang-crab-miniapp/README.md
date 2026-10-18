@@ -44,11 +44,34 @@ poyang-crab-miniapp/
 | 物流轨迹 | `GET /logistics/track?expressNo=` | `SfExpressService#queryRoutes`（见待办） |
 | 图片上传 | `POST /system/file/upload` | `SysFileController` |
 
-## 本地运行
+## 本地运行（开发模式，不使用 Docker）
 
-1. 用微信开发者工具「导入项目」，选择本目录，填入自己的 AppID（`project.config.json` 中 `wxPLACEHOLDER0000` 需替换）。
-2. 本地联调：`config/index.js` 的 `ENV = 'dev'`，并在「详情 → 本地设置」勾选 **不校验合法域名**。
-3. 启动后端（默认 `http://localhost:8080/api`，见 `poyang-crab-backend/README`）。
+### 方式一：微信开发者工具（真机能力 / 正式联调）
+
+1. **先起后端**：`scripts\start-backend.bat`（或 `start-all.bat`），确认 `http://localhost:8080/api/actuator/health` 返回 `{"status":"UP"}`。
+2. **打开工具**：微信开发者工具 → 「+」→ **导入项目** → 目录选本目录 `poyang-crab-miniapp`。
+3. **填 AppID**：换成自己的小程序 AppID（`project.config.json` 里当前是占位符 `wxPLACEHOLDER0000`，导入界面也可直接改）。
+4. **本地设置**（右上「详情 → 本地设置」）：勾选 **不校验合法域名、web-view（业务域名）、TLS 版本以及 HTTPS 证书** —— `config/index.js` 的 `ENV = 'dev'` 指向 `http://localhost:8080/api`。
+5. **编译**：点「编译」。工具已内置 4 个编译模式（首页 / 商品详情 `id=1` / 购物车 / 我的），见 `project.config.json` 的 `condition` 字段。
+6. **登录**：`POST /wx/login` 走微信 `code2Session`，需先在后台「系统管理 → 系统参数」配置 `wechat.mini.appid` / `wechat.mini.secret`，否则登录必然失败（属预期）。
+7. **数据**：列表页需要数据，用 `scripts\init-db.bat -Force -WithDemo` 灌演示数据（会员 / 商品 / 库存 / 订单 / 发货 / 文章）。
+
+> `tabBar` 未内置图标（避免提交二进制占位），工具里为纯文字；正式发布前补 `iconPath` / `selectedIconPath`。
+
+### 方式二：浏览器等效预览（本机未装微信开发者工具时看效果）
+
+```bat
+scripts\preview-miniapp.bat
+:: 双端并排  http://localhost:8850/preview/#miniapp
+:: 单端大屏  http://localhost:8850/preview/single.html?app=miniapp
+```
+
+预览服务按**真实 WXML / WXSS / JS** 渲染（含 `wx:if` / `wx:for` / `setData` / `wx.request`），
+并把 `/api` 反代到后端 `:8080`；页面顶部可切换「未登录 / 会员 1-3」注入登录态，
+会员中心、订单、物流轨迹、评价等需要登录的页面可直接看到演示数据。
+
+> 真机能力（微信支付、扫码、订阅消息、真机调试）仍需微信开发者工具。
+> 原理、能力清单与已知边界见 [`scripts/miniapp-preview/README.md`](../scripts/miniapp-preview/README.md)。
 
 ## 已知待办（TODO）
 

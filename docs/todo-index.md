@@ -95,6 +95,7 @@
 | 小程序 `tabBar` | 未配置图标（避免提交二进制占位），发布前需补充 |
 | 小程序 `project.config.json` | AppID 为占位符 `wxPLACEHOLDER0000` / `wxPLACEHOLDER1111` |
 | `scripts/`（原生启停脚本） | Windows PowerShell 5.1+ 适配；一键启动/停止/自检/初始化数据库，不依赖 Docker。详见 `scripts/README.md` |
+| `scripts/miniapp-preview/`（小程序浏览器预览） | 本机未装微信开发者工具时的等效预览：Node 静态服务 + `/api` 反代 `:8080` + 浏览器端 mini-runtime（真实执行 WXML/WXSS/JS）+ 本地签发**预览令牌**注入登录态。入口 `scripts\preview-miniapp.bat` → `http://localhost:8850/preview/`。详见 `scripts/miniapp-preview/README.md` |
 | 后台侧边菜单来源 | 后端 `sys_menu` 与前端 `asyncRoutes`（`src/router/index.ts`）**一一对应**（7 分组 25 页面，`path`/`component`/`perm` 完全一致）。当前仍以静态路由 + `perm` 过滤渲染，`GET /system/menu/routes` 已备好但未接入；在后台新增菜单后需同步补前端路由文件 |
 | 字典体系（`sys_dict` / `sys_dict_item`） | 全站枚举（状态 / 类型 / 等级 / 审核状态 / 支付状态 / 变动类型 …）**统一在「系统管理 → 字典管理」维护**，25 类 97 项。前端 `src/composables/useDict.ts` 登录后拉一次 `GET /system/dict/options` 做内存缓存；页面用 `Column.dict` / `Field.dict` 声明字典类型即可显示中文与渲染下拉 |
 | 引用表名称显示（`src/composables/useLookup.ts`） | 分类 / 渠道 / 会员 / 商品 / SKU / 栏目 / 订单 / 角色等「存 id 的字段」一律用 `Column.lookup` / `Field.lookup`（+`lookupTop` 追加「顶级（0）」、`lookupEmpty` 兜底文案）显示名称与下拉，页面里不再出现裸 ID |
@@ -127,6 +128,11 @@
 | `src/components/ScanInput/index.vue` 打开摄像头 | `start()` 在「无摄像头/被浏览器拦截」时可能长时间不返回，必须保留 **8 秒超时兜底**（超时后提示改用扫码枪/手工录入），否则弹窗会永远停在「正在打开摄像头…」。另外 `html5-qrcode` 构造函数只接受**元素 id 字符串**，不要传 HTMLElement（会被 vue-tsc 报错） |
 | `src/composables/useTable.ts` 的 `query` | 类型为 `Record<string, any>`。不要改回 `Record<string, unknown>`：`ScanInput`/`el-input` 的 `v-model` 绑定 `query.xxx` 会因类型不兼容导致 `vue-tsc` 报错 |
 | 字典/引用表缓存刷新 | 字典管理页保存后必须 `loadDicts(true)` 强制刷新；其他页面在数据变更（新增/删除）后调 `clearLookups()` 再 `load()`，否则 id→名称 的映射会是旧的 |
+| 小程序预览 `runtime.js#evalExpr` | 指令属性（`wx:if` / `wx:elif` / `wx:for`）的值**本身带 `{{ }}`**，求值前必须先剥掉花括号；否则 `new Function('with($s){return ({{x}})}')` 恒抛语法错，表现为「所有条件渲染与列表渲染静默失效、页面只剩静态骨架」 |
+| 小程序预览 `runtime.js#requireFn` | 相对路径 `require('./config/index')` 的 base 必须补成**绝对 URL**（`location.origin + dir`）再交给 `new URL()`；只传 `/poyang-crab-miniapp/` 这类相对路径会抛 `Invalid URL`，且**不要**对已是绝对路径的 dir 再拼一次 origin |
+| 小程序预览 `loadModule` 参数位 | 注入的 `App/Page/Component/getApp/getCurrentPages/console/setTimeout…` 顺序必须与形参一一对应（漏一个 `Component` 占位就会全体错位，`getApp()` 返回页面栈，页面报 `xxx is not a function`） |
+| 小程序预览 `pageOptionsCache` | 页面模块被缓存后再次进入不会再执行 `Page()`，必须记住每个页面文件的配置兜底，否则二次进入（切 tab / 返回）报「页面未注册（Page() 未执行）」 |
+| 小程序预览 `image` 的 `src` | 演示数据里 `images` 常是字符串 `"[]"`/`"{}"`，直接塞给 `img.src` 会让浏览器请求 `/[]` 并报 404；须与空串一起回退占位图 |
 
 ## 本轮改造验收记录（字典化 / 名称显示 / 扫码 / 筛选）
 
@@ -152,3 +158,54 @@
 | 栏目管理：上级 ID 显示名称 + 下拉默认 0 | `cms/category` `lookup:'cmsCategory'` + `lookupTop` | 列表显示「顶级」；弹窗下拉「顶级（不选）+ 品牌故事/养殖基地/捕捞实景/招商合作/平台公告」 |
 | 列表筛选原先全部为空操作 | `BaseCrudController#buildQuery`（属性名→列名、数字 eq、其它 like、固定主键排序） | 所有列表页筛选参数现在真实生效（订单号 / 分类 / 销售模式 / 运单号 / 状态…） |
 | 回归 | 26 个后台路由全量遍历 | 全部 render，无 `code≠200` 接口、无 JS 报错；`vue-tsc --noEmit` EXIT=0；`npm run build` EXIT=0；H5 `:8849` HTTP 200；后端 `/api/actuator/health` = UP；两套小程序 JSON 合法 |
+
+## 小程序浏览器预览验收记录（本机未装微信开发者工具）
+
+> 背景：本机无微信开发者工具（`C:\Program Files (x86)\Tencent\微信web开发者工具\` 下无 `cli.bat`），
+> 为「用浏览器打开看效果」新增 `scripts/miniapp-preview/`，同时把微信开发者工具的导入步骤补进两个小程序 README。日期：2026-10-18。
+
+| 项 | 说明 |
+| --- | --- |
+| 启动 | `scripts\preview-miniapp.bat` → http://localhost:8850/preview/（双端并排）；`single.html?app=miniapp\|channel`（单端大屏）；`scripts\stop-all.bat` 统一停止 |
+| 架构 | `server.mjs`（静态 + `/api` 反代 8080 + `/preview/token` 签发预览令牌）+ `runtime.js`（浏览器 mini-runtime）+ `ui.js`（设备壳 / 登录态 / 请求日志） |
+| 登录态 | 用后端同一 JWT 密钥在本地签发预览令牌 → 注入 `CRAB_TOKEN`/`CRAB_USER`、`CHANNEL_TOKEN`/`CHANNEL_INFO`；顶部下拉切换 未登录 / 会员 1-3 / 渠道 1-2（默认会员 1 + 渠道 1） |
+| 请求链路 | 页面内的 `http://localhost:8080/api` 自动改写为**同源** `/api` 再由 Node 反代，**不依赖**「不校验合法域名」与 CORS |
+
+### C 端（poyang-crab-miniapp，11 页）
+
+| 页面 | 实测结果 |
+| --- | --- |
+| `index/index` | 分类 + 商品卡（真实商品名 / ¥398.00 / 产地标签）+ 直播入口（`wx:if` 生效） |
+| `product/detail`（`id=1`） | 公母 / 重量档 / 包装、SKU 价格、底部操作栏 |
+| `cart/index` | 空态「购物车还是空的 去挑湖蟹」 |
+| `order/confirm` | 地址选择 + 商品清单 + 订单备注 |
+| `order/list` | 状态筛选 + `DD202610100001` 已支付 + 金额 |
+| `order/detail`（`orderNo=DD202610100001`） | 收货信息 / 订单金额 / 运单区 |
+| `logistics/index` | 顺丰冷链 + 运单号 `SF1234567890123` + 轨迹时间轴 |
+| `review/index` | 总体评分 / 鲜活度 5 星 + 评价表单 |
+| `article/index`（`id=1`） | 品牌文章（rich-text） |
+| `member/index` | 登录态生效：昵称 / GOLD / 1280 积分 / ¥200 储值 |
+| `login/index` | 已登录时自动 `navigateBack`（与小程序真实行为一致） |
+
+交互实测：点击商品卡 → 详情（带 `id`）→ 返回栈回退 → tabBar 切「订单」→ 订单列表，全部正常。
+
+### 渠道商端（poyang-crab-channel，9 页）
+
+| 页面 | 实测结果 |
+| --- | --- |
+| `index/index` | 档案 + 编号 `CH2026001` + 授信/已用额度 + 待结算佣金 + 额度使用率 |
+| `product/index` | 渠道专属价（仅批发商品 + 起订量） |
+| `report/index` | 报单草稿 / 我的报单 |
+| `mine/index` | 档案 + 额度 + 佣金 + 联系人 |
+| `order/index` | 批发订单 + 状态筛选 + 明细 |
+| `commission/index` | 待结算 ¥292.60 / 已结算 ¥31.84 + 明细（SALE +¥31.84） |
+| `settlement/index` | 对账结算 + 额度流水 + 生成结算单 |
+| `dealer/index` | 下级经销商团队（按 `parent_id` 反查） |
+| `login/index` | 未登录进登录页；已登录直接进业务页 |
+
+### 本轮同时修掉的预览缺陷（详见上方「勿回退」表）
+
+`evalExpr` 花括号剥壳（条件/列表渲染全部失效）、`require` 相对路径 base、`loadModule` 参数错位（`getApp()` 不可用）、
+二次进页「页面未注册（Page() 未执行）」、`images="[]"` 引起的 `/[]` 404 占位。
+
+> ⚠️ 预览令牌仅限本机 `127.0.0.1` 使用，`/preview/token` **不得**暴露到生产环境。

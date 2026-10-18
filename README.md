@@ -95,7 +95,8 @@ Windows 原生启停脚本（**不使用 Docker**），详见 [`scripts/README.m
 scripts\check-env.bat     :: 环境自检：运行时 / 中间件端口 / 客户端 / 目录 / SQL / 应用端口
 scripts\init-db.bat       :: 初始化数据库（幂等，已有表自动跳过）
 scripts\start-all.bat     :: 一键启动：依赖检查 → 数据库 → 后端 → 对象存储 → 后台 → H5
-scripts\stop-all.bat      :: 停止全部服务（按窗口 PID，再按端口兜底）
+scripts\preview-miniapp.bat :: 可选：小程序浏览器预览（本机没装微信开发者工具时看两套小程序的效果，:8850）
+scripts\stop-all.bat      :: 停止全部服务（按窗口 PID，再按端口兜底；含 :8850）
 ```
 
 脚本行为要点：
@@ -118,6 +119,10 @@ cd poyang-crab-admin && npm i && npm run dev
 cd poyang-crab-h5 && npm i && npm run dev
 
 # 小程序：微信开发者工具分别导入 poyang-crab-miniapp / poyang-crab-channel
+# （导入步骤见两个小程序各自的 README「本地运行」章节）
+
+# 小程序浏览器预览（本机未装微信开发者工具时，按真实 WXML/WXSS 看效果，端口 8850）
+scripts\preview-miniapp.bat
 ```
 
 冒烟自检：`GET http://localhost:8080/api/actuator/health` 应返回 `{"status":"UP"}`。
@@ -174,5 +179,6 @@ docker compose ps
 | [docs/api-convention.md](./docs/api-convention.md) | 接口统一约定、鉴权白名单、错误码、CRUD 规范、安全与审计约定 |
 | [docs/go-live-checklist.md](./docs/go-live-checklist.md) | 上线资质、微信/支付/顺丰对接、合规与验收清单（T30/T31） |
 | [docs/todo-index.md](./docs/todo-index.md) | 全仓库 `TODO(Txx)` 索引 |
+| [scripts/miniapp-preview/README.md](./scripts/miniapp-preview/README.md) | 小程序浏览器预览：原理、能力清单、已知边界、常见问题 |
 
 各子工程另有独立 README：`poyang-crab-backend`、`poyang-crab-admin`、`poyang-crab-h5`、`poyang-crab-miniapp`、`poyang-crab-channel`。
