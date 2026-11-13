@@ -11,21 +11,21 @@ spring:
       connection-test-query: SELECT 1
       pool-name: PoyangCrabHikariPool
     # 读写分离开关：默认关闭（后台可开启，见 sys_config: datasource.read-write-split）
-    url: jdbc:mysql://localhost:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://172.16.28.248:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: poyang_crab
     password: BZcEXmWxiDcmx5bw
     # 从库（读写分离开启时启用）
     slave:
       enabled: false
-      url: jdbc:mysql://localhost:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://172.16.28.248:3306/poyang_crab?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
       username: poyang_crab
       password: BZcEXmWxiDcmx5bw
 
   data:
     redis:
-      host: localhost
+      host: 172.16.28.201
       port: 6379
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD:RUiTMHWVr5cdoAPg}
       database: 0
       timeout: 5s
       lettuce:
@@ -36,11 +36,11 @@ spring:
           max-wait: 5s
 
   rabbitmq:
-    host: localhost
+    host: 172.16.28.201
     port: 5672
-    virtual-host: /poyang_crab
-    username: poyang_crab
-    password: BZcEXmWxiDcmx5bw
+    virtual-host: /
+    username: aicadmin
+    password: admin9695
     publisher-confirm-type: correlated
     publisher-returns: true
     listener:
@@ -59,3 +59,26 @@ logging:
     org.springframework.amqp: info
   file:
     name: ./logs/poyang-crab-backend.log
+
+crab:
+  order:
+    expire-minutes: 30
+  jwt:
+    # 生产必须通过环境变量 CRAB_JWT_SECRET 覆盖
+    secret: ${CRAB_JWT_SECRET:xyGz-poyang-crab-2026-please-change-me-32bytes}
+    expire-hours: 24
+  storage:
+    local:
+      base-path: ./data/upload
+      domain: http://crab.xiegongzhu.com/api/files
+  wechat:
+    mp:
+      appid: ${WX_MP_APPID:}
+      secret: ${WX_MP_SECRET:}
+    mini:
+      appid: ${WX_MINI_APPID:}
+      secret: ${WX_MINI_SECRET:}
+    pay:
+      mchid: ${WX_PAY_MCHID:}
+      apiv3-key: ${WX_PAY_APIV3KEY:}
+      notify-url: http://crab.xiegongzhu.com/api/pay/notify/wechat

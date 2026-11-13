@@ -1,0 +1,106 @@
+# =============================================================
+# 螃蟹小公主 · 鄱阳湖湖蟹 多端平台 一键编排（PRO.md 6.3）
+# 服务清单：mysql8 / redis / rabbitmq / minio / app-backend
+#          / app-admin / app-h5 / app-static / mysql-backup / nginx
+# 用法：cp .env.example .env && docker compose up -d
+# =============================================================
+name: poyang-crab
+
+services:
+  app-backend:
+    build:
+      context: ../poyang-crab-backend
+      dockerfile: Dockerfile
+    container_name: crab-backend
+    restart: always
+    depends_on:
+      mysql8:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MQ_HOST: ${MQ_HOST}
+      MQ_USER: ${MQ_USER}
+      MQ_PASSWORD: ${MQ_PASSWORD}
+      CRAB_JWT_SECRET: ${CRAB_JWT_SECRET}
+      WX_MP_APPID: ${WX_MP_APPID}
+      WX_MP_SECRET: ${WX_MP_SECRET}
+      WX_MINI_APPID: ${WX_MINI_APPID}
+      WX_MINI_SECRET: ${WX_MINI_SECRET}
+      WX_PAY_MCHID: ${WX_PAY_MCHID}
+      WX_PAY_APIV3KEY: ${WX_PAY_APIV3KEY}
+      SF_PARTNER_ID: ${SF_PARTNER_ID}
+      SF_CHECK_WORD: ${SF_CHECK_WORD}
+      TZ: Asia/Shanghai
+    ports:
+      - "${BACKEND_PORT}:8080"
+    volumes:
+      - backend-logs:/app/logs
+      - upload-data:/data/upload
+    networks: [crab-net]
+
+  app-admin:
+    image: nginx:1.27-alpine
+    container_name: crab-admin
+    restart: always
+    depends_on: [app-backend]
+    ports:
+      - "${ADMIN_PORT}:80"
+    volumes:
+      - ../poyang-crab-admin/dist:/usr/share/nginx/html:ro
+      - ./nginx/conf.d/admin.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [crab-net]
+
+  app-h5:
+    image: nginx:1.27-alpine
+    container_name: crab-h5
+    restart: always
+    depends_on: [app-backend]
+    ports:
+      - "${H5_PORT}:80"
+    volumes:
+      - ../poyang-crab-h5/dist:/usr/share/nginx/html:ro
+      - ./nginx/conf.d/h5.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [crab-net]
+
+  # 小程序构建产物托管（体验版/正式版包下载，机构内部分发）
+  app-static:
+    image: nginx:1.27-alpine
+    container_name: crab-static
+    restart: always
+    volumes:
+      - ../poyang-crab-miniapp/dist:/usr/share/nginx/html/miniapp:ro
+      - ../poyang-crab-channel/dist:/usr/share/nginx/html/channel:ro
+      - ./nginx/conf.d/static.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [crab-net]
+
+  # 反向代理：PC 官网 / API / HTTPS 入口
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: crab-nginx
+    restart: always
+    depends_on: [app-backend, app-h5, app-admin]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - upload-data:/usr/share/nginx/files:ro
+    networks: [crab-net]
+
+volumes:
+  backend-logs:
+  upload-data:
+
+networks:
+  crab-net:
+    driver: bridge
